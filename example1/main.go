@@ -121,13 +121,14 @@ func serveReverseProxy(target string, res http.ResponseWriter, req *http.Request
 // Given a request send it to the appropriate url
 func handleRequestAndRedirect(res http.ResponseWriter, req *http.Request) {
 
+	//
 	requestPayload := parseRequestBody(req)
 
-	url := getProxyUrl(requestPayload.ProxyCondition)
+	urlFrom := getProxyUrl(requestPayload.ProxyCondition)
 
-	logRequestPayload(requestPayload, url)
+	logRequestPayload(requestPayload, urlFrom)
 
-	serveReverseProxy(url, res, req)
+	serveReverseProxy(urlFrom, res, req)
 }
 
 func main() {

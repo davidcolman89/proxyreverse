@@ -31,6 +31,7 @@ func main() {
 
 
 	router.HandleFunc("/people", GetPeople).Methods("GET")
+	router.HandleFunc("/", GetHello).Methods("GET")
 
 	log.Fatal(http.ListenAndServe(":8888", router))
 }
@@ -40,4 +41,14 @@ func main() {
 func GetPeople(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(people)
+}
+
+
+func GetHello(w http.ResponseWriter, r *http.Request) {
+
+	var hi []string
+
+	hi = append(hi, "hola", "mundo")
+
+	json.NewEncoder(w).Encode(hi)
 }
