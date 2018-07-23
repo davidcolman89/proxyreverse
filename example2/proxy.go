@@ -5,21 +5,31 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/url"
-	"log"
 	"net/http/httputil"
+	"github.com/davidcolman89/proxyreverse/example2/utils"
 )
 
+const defaultRemote = "https://api.mercadolibre.com/"
+const defaultLocalRemote = "http://localhost:8888/people"
+
 func main() {
+	//http.HandleFunc("/", automaticProxy)
+	http.HandleFunc("/", manualProxy)
+	http.HandleFunc("/reverseProxy", automaticProxy)
 
-	http.HandleFunc("/proxy", manualProxy)
-	http.HandleFunc("/automaticProxy", automaticProxy)
-
+	fmt.Println("Server Listen on Localhost:9999")
 	http.ListenAndServe(":9999", nil)
 }
 
 func manualProxy(w http.ResponseWriter, r *http.Request) {
 
-	resp, err := http.Get("https://api.mercadolibre.com/categories/MLA97994")
+
+	ip := utils.GetIp()
+	destinyPath := r.URL.Path
+	utils.Statistics(ip, destinyPath)
+
+	remote := defaultRemote + destinyPath
+	resp, err := http.Get(remote)
 
 	if err != nil {
 		fmt.Println("Error:  ",err)
@@ -33,36 +43,22 @@ func manualProxy(w http.ResponseWriter, r *http.Request) {
 }
 
 
-var cmd Cmd
-var srv http.Server
-
-func StartServer(bind string, remote string)  {
-	log.Printf("Listening on %s, forwarding to %s", bind, remote)
-	h := &handle{reverseProxy: remote}
-	srv.Addr = bind
-	srv.Handler = h
-	//go func() {
-	if err := srv.ListenAndServe(); err != nil {
-		log.Fatalln("ListenAndServe: ", err)
-	}
-	//}()
-}
-
 func automaticProxy(w http.ResponseWriter, r *http.Request) {
 
 
-	//s := "https://api.mercadolibre.com/categories/MLA97994"
-	s := "http://localhost:8888/"
-	remote,err := url.Parse(s)
+	ip := utils.GetIp()
+	destinyPath := r.URL.Query().Get("p")
+	utils.Statistics(ip, destinyPath)
 
-	if err != nil {
-		log.Fatalln(err)
-	}
+	remote := defaultRemote + destinyPath
 
-	//http.Handle("http://localhost:9999", httputil.NewSingleHostReverseProxy(remote))
+	fmt.Println(remote)
 
-	StartServer()
+	url, _ := url.Parse(remote)
 
+	fmt.Println(url)
+
+	proxy := httputil.NewSingleHostReverseProxy(url)
+	proxy.ServeHTTP(w, r)
 
 }
-

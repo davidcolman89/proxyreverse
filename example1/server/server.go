@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"github.com/gorilla/mux"
 	"encoding/json"
+	"fmt"
 )
 
 
@@ -32,6 +33,8 @@ func main() {
 
 	router.HandleFunc("/people", GetPeople).Methods("GET")
 	router.HandleFunc("/", GetHello).Methods("GET")
+
+	fmt.Println("Server Listen on localhost:8888")
 
 	log.Fatal(http.ListenAndServe(":8888", router))
 }
