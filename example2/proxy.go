@@ -3,14 +3,12 @@ package main
 import (
 	"net/http"
 	"fmt"
-	"io/ioutil"
 	"net/url"
 	"net/http/httputil"
 	"github.com/davidcolman89/proxyreverse/example2/utils"
+	"github.com/davidcolman89/proxyreverse/example2/repositories"
+	"github.com/davidcolman89/proxyreverse/example2/services"
 )
-
-const defaultRemote = "https://api.mercadolibre.com/"
-const defaultLocalRemote = "http://localhost:8888/people"
 
 func main() {
 	//http.HandleFunc("/", automaticProxy)
@@ -18,27 +16,22 @@ func main() {
 	http.HandleFunc("/reverseProxy", automaticProxy)
 
 	fmt.Println("Server Listen on Localhost:9999")
+	fmt.Println("/ 				--> manual proxy")
+	fmt.Println("/reverseProxy 	--> automatic proxy")
+
 	http.ListenAndServe(":9999", nil)
 }
 
 func manualProxy(w http.ResponseWriter, r *http.Request) {
 
+	repo := repositories.NewProxyRepo()
+	service := services.NewProxyService(repo)
 
-	ip := utils.GetIp()
-	destinyPath := r.URL.Path
-	utils.Statistics(ip, destinyPath)
-
-	remote := defaultRemote + destinyPath
-	resp, err := http.Get(remote)
+	err:= service.ReverseProxy(w , r )
 
 	if err != nil {
 		fmt.Println("Error:  ",err)
 	}
-
-	body, err := ioutil.ReadAll(resp.Body)
-
-
-	fmt.Fprintf(w, string(body), r.URL.Path)
 
 }
 
@@ -50,7 +43,7 @@ func automaticProxy(w http.ResponseWriter, r *http.Request) {
 	destinyPath := r.URL.Query().Get("p")
 	utils.Statistics(ip, destinyPath)
 
-	remote := defaultRemote + destinyPath
+	remote := "http://localhost:8888" + destinyPath
 
 	fmt.Println(remote)
 
