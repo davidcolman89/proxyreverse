@@ -5,12 +5,12 @@ import (
 	"github.com/davidcolman89/proxyreverse/example2/utils"
 	"net/http"
 	"fmt"
-	"io/ioutil"
+	"log"
 )
 
 
 const defaultApi = "https://api.mercadolibre.com/"
-const defaultLocalRemote = "http://localhost:8888/people"
+const localApi = "http://localhost:8888/people"
 
 
 type proxyService struct {
@@ -26,24 +26,14 @@ func (s proxyService) ReverseProxy(w http.ResponseWriter, r *http.Request) (erro
 
 	ip := utils.GetIp()
 	destinyPath := r.URL.Path
+	target := defaultApi + destinyPath
 
 	utils.Statistics(ip, destinyPath)
 
-	target := defaultApi + destinyPath
+	body, err := s.ProxyRepo.Call(target)
 
-	resp, err := http.Get(target)
-
-	if err != nil {
-		return err
-	}
-
-	body, err := ioutil.ReadAll(resp.Body)
-
-	if err != nil {
-		return err
-	}
-
+	log.Println("Return response from target")
 	fmt.Fprintf(w, string(body), destinyPath)
 
-	return nil
+	return err
 }

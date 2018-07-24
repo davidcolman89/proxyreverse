@@ -1,5 +1,5 @@
 package repositories
 
 type Proxy interface {
-	Call()
+	Call(target string)  ([]byte, error)
 }
