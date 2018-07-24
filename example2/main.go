@@ -3,10 +3,9 @@ package main
 import (
 	"net/http"
 	"fmt"
+	"github.com/gomodule/redigo/redis"
 	"github.com/davidcolman89/proxyreverse/example2/repositories"
 	"github.com/davidcolman89/proxyreverse/example2/services"
-	"github.com/gomodule/redigo/redis"
-	"log"
 )
 
 func main() {
@@ -21,7 +20,7 @@ func main() {
 
 func manualProxy(w http.ResponseWriter, r *http.Request) {
 
-	c, err := redis.Dial("tcp", ":6379")
+	c, err := redis.Dial("tcp", "redis:6379")
 
 	if err != nil {
 		fmt.Println("Error:  ",err)

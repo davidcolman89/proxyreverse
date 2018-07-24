@@ -17,7 +17,9 @@ func NewProxyRepo() Proxy{
 func (r proxyRepo) Call(target string)  ([]byte, error){
 
 	log.Println("Get to target: ", target)
+	//TODO QUE PASA SI VIENE POR POST....  
 	resp, err := http.Get(target)
+
 
 	if err != nil {
 		return nil, err

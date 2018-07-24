@@ -2,41 +2,17 @@
 
 
 [[projects]]
-  branch = "master"
-  name = "github.com/bogdanovich/dns_resolver"
-  packages = ["."]
-  revision = "a8e42bc6a5b6c9a93be01ca204be7e17f7ba4cd2"
-
-[[projects]]
-  name = "github.com/miekg/dns"
-  packages = ["."]
-  revision = "5a2b9fab83ff0f8bfc99684bd5f43a37abe560f1"
-  version = "v1.0.8"
-
-[[projects]]
-  branch = "master"
-  name = "golang.org/x/crypto"
+  name = "github.com/gomodule/redigo"
   packages = [
-    "ed25519",
-    "ed25519/internal/edwards25519"
+    "internal",
+    "redis"
   ]
-  revision = "a2144134853fc9a27a7b1e3eb4f19f1a76df13c9"
-
-[[projects]]
-  branch = "master"
-  name = "golang.org/x/net"
-  packages = [
-    "bpf",
-    "internal/iana",
-    "internal/socket",
-    "ipv4",
-    "ipv6"
-  ]
-  revision = "a680a1efc54dd51c040b3b5ce4939ea3cf2ea0d1"
+  revision = "9c11da706d9b7902c6da69c592f75637793fe121"
+  version = "v2.0.0"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "8d8b71523053a79c88e1d9421b106541fa791e15069e7137f1f90af853243718"
+  inputs-digest = "a44d2702ff44e2a72e240620f1d6633bdb6466aa1a68a494ed3833bd675e5b66"
   solver-name = "gps-cdcl"
   solver-version = 1
